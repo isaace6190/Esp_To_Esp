@@ -47,20 +47,11 @@ void buzzOutput(int times, int onMs = 150, int offMs = 120){
     }
 }
 
-uint8_t mapPressCountToTarget(int count){
-  if(NODE_ID == 1){
-    if (count == 2) return 2;
-    if (count == 3) return 3;
+uint8_t mapPressCountToTarget(int count) {
+  if (count < 1 || count > NODE_ID) {
+    return 0;   // invalid target
   }
-  else if (NODE_ID == 2){
-    if (count == 1) return 1;
-    if ( count == 3) return 3;
-  }
-  else if (NODE_ID == 3){
-    if (count == 1) return 1;
-    if (count == 2) return 2;
-  }
-  return 0;
+  return (uint8_t)count;
 }
 
 bool isDuplicate(const Msg &msg){
@@ -90,7 +81,11 @@ void sendNewMessage(uint8_t chosenTarget) {
   Serial.print(" ttl=");
   Serial.print(msg.ttl);
   Serial.print(" result=");
-  Serial.println(result == ESP_OK ? "OK" : "FAIL");
+  if (result == ESP_OK) {
+    Serial.println("OK");
+  } else {
+    Serial.println("FAIL");
+  }
 }
 
 //receiving callback
@@ -153,7 +148,11 @@ void onReceive(const uint8_t *mac, const uint8_t *data, int len){
   Serial.print(" newTTL=");
   Serial.print(msg.ttl);
   Serial.print(" result=");
-  Serial.println(result == ESP_OK ? "OK" : "FAIL");
+  if (result == ESP_OK) {
+    Serial.println("OK");
+  } else {
+    Serial.println("FAIL");
+  }
 }
 
 void setup() {
